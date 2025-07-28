@@ -4,7 +4,7 @@
 
 import ApiClient from '../utils/apiClient';
 
-const AGENT_API_URL = import.meta.env.VITE_AGENT_API_URL || 'http://localhost:8000';
+const AGENT_API_URL = import.meta.env.VITE_AGENT_API_URL || 'https://agents.vistara.dev';
 
 class AgentApiClient extends ApiClient {
   constructor() {
