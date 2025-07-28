@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,24 +10,127 @@
   }
   
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+  
+  h1 {
+    @apply text-3xl leading-tight;
+  }
+  
+  h2 {
+    @apply text-2xl leading-tight;
+  }
+  
+  h3 {
+    @apply text-xl leading-snug;
   }
 }
 
 @layer components {
+  /* Button Components */
   .btn-primary {
-    @apply bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors;
+    @apply bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 transition-all duration-200 shadow-soft hover:shadow-medium;
   }
   
   .btn-secondary {
-    @apply bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors;
+    @apply bg-white text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 transition-all duration-200 shadow-soft hover:shadow-medium border border-gray-200;
   }
   
+  .btn-outline {
+    @apply bg-transparent text-primary-600 px-6 py-3 rounded-xl font-medium hover:bg-primary-50 focus:ring-4 focus:ring-primary-200 transition-all duration-200 border border-primary-200;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent text-gray-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 transition-all duration-200;
+  }
+  
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+  
+  .btn-lg {
+    @apply px-8 py-4 text-lg;
+  }
+  
+  /* Card Components */
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200;
+    @apply bg-white rounded-2xl shadow-soft border border-gray-100 hover:shadow-medium transition-all duration-200;
   }
   
+  .card-elevated {
+    @apply bg-white rounded-2xl shadow-medium border border-gray-100 hover:shadow-large transition-all duration-200;
+  }
+  
+  .card-interactive {
+    @apply bg-white rounded-2xl shadow-soft border border-gray-100 hover:shadow-medium hover:border-gray-200 transition-all duration-200 cursor-pointer;
+  }
+  
+  /* Input Components */
   .input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary-200 focus:border-primary-500 transition-all duration-200 bg-white placeholder-gray-400;
+  }
+  
+  .input-error {
+    @apply border-error-300 focus:ring-error-200 focus:border-error-500;
+  }
+  
+  .input-success {
+    @apply border-success-300 focus:ring-success-200 focus:border-success-500;
+  }
+  
+  /* Status Components */
+  .status-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+  
+  .status-success {
+    @apply bg-success-100 text-success-800;
+  }
+  
+  .status-warning {
+    @apply bg-warning-100 text-warning-800;
+  }
+  
+  .status-error {
+    @apply bg-error-100 text-error-800;
+  }
+  
+  .status-info {
+    @apply bg-info-100 text-info-800;
+  }
+  
+  .status-neutral {
+    @apply bg-gray-100 text-gray-800;
+  }
+  
+  /* Utility Components */
+  .gradient-primary {
+    @apply bg-gradient-to-r from-primary-500 to-primary-700;
+  }
+  
+  .gradient-success {
+    @apply bg-gradient-to-r from-success-500 to-success-700;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent;
+  }
+  
+  /* Animation Classes - These are already provided by Tailwind via the config */
+  .animate-in {
+    @apply animate-fade-in;
+  }
+  
+  /* Loading States */
+  .skeleton {
+    @apply bg-gray-200 animate-pulse rounded;
+  }
+  
+  .loading-spinner {
+    @apply animate-spin rounded-full border-2 border-gray-300 border-t-primary-600;
   }
 }

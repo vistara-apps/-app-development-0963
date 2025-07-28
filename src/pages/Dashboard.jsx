@@ -8,7 +8,8 @@ import {
   TrendingUp, 
   Clock, 
   CheckCircle,
-  AlertCircle 
+  AlertCircle,
+  Plus
 } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 import { useApp } from '../context/AppContext'
@@ -74,15 +75,16 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">Welcome back, {state.user.name}! Here's what's happening with your agency.</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
+          <p className="text-lg text-gray-600">Welcome back, <span className="font-semibold text-gray-900">{state.user.name}</span>! Here's what's happening with your agency.</p>
         </div>
-        <div className="mt-4 sm:mt-0">
-          <Link to="/projects" className="btn-primary">
+        <div className="mt-6 sm:mt-0">
+          <Link to="/projects" className="btn-primary btn-lg flex items-center">
+            <Plus className="w-5 h-5 mr-2" />
             Create New Project
           </Link>
         </div>
@@ -90,26 +92,28 @@ export default function Dashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => {
+        {stats.map((stat, index) => {
           const Icon = stat.icon
           return (
-            <div key={stat.name} className="card p-6">
-              <div className="flex items-center">
-                <div className={`${stat.color} p-3 rounded-lg`}>
-                  <Icon className="w-6 h-6 text-white" />
+            <div 
+              key={stat.name} 
+              className="card-elevated p-6 animate-slide-up"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className={`${stat.color} p-3 rounded-2xl shadow-soft`}>
+                  <Icon className="w-7 h-7 text-white" />
                 </div>
-                <div className="ml-4 flex-1">
-                  <p className="text-sm font-medium text-gray-600">{stat.name}</p>
-                  <div className="flex items-center">
-                    <p className="text-2xl font-semibold text-gray-900">{stat.value}</p>
-                    <span className={`ml-2 flex items-center text-sm font-medium ${
-                      stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'
-                    }`}>
-                      <TrendingUp className="w-4 h-4 mr-1" />
-                      {stat.change}
-                    </span>
-                  </div>
-                </div>
+                <span className={`status-badge ${
+                  stat.changeType === 'increase' ? 'status-success' : 'status-error'
+                } flex items-center`}>
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  {stat.change}
+                </span>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">{stat.name}</p>
+                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
               </div>
             </div>
           )
@@ -117,66 +121,157 @@ export default function Dashboard() {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Performance Chart */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Overview</h3>
-          <ResponsiveContainer width="100%" height={300}>
+        <div className="card-elevated p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-xl font-bold text-gray-900">Performance Overview</h3>
+              <p className="text-sm text-gray-600 mt-1">Monthly projects and revenue trends</p>
+            </div>
+            <div className="flex items-center space-x-4 text-sm">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-primary-500 rounded-full mr-2"></div>
+                <span className="text-gray-600">Projects</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-success-500 rounded-full mr-2"></div>
+                <span className="text-gray-600">Revenue</span>
+              </div>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={320}>
             <LineChart data={performanceData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis yAxisId="left" />
-              <YAxis yAxisId="right" orientation="right" />
-              <Tooltip />
-              <Line yAxisId="left" type="monotone" dataKey="projects" stroke="#3b82f6" strokeWidth={2} name="Projects" />
-              <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} name="Revenue ($)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis 
+                dataKey="name" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 12 }}
+              />
+              <YAxis 
+                yAxisId="left" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 12 }}
+              />
+              <YAxis 
+                yAxisId="right" 
+                orientation="right" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 12 }}
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 25px -5px rgba(0, 0, 0, 0.1)'
+                }}
+              />
+              <Line 
+                yAxisId="left" 
+                type="monotone" 
+                dataKey="projects" 
+                stroke="#3b82f6" 
+                strokeWidth={3} 
+                name="Projects"
+                dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
+                activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
+              />
+              <Line 
+                yAxisId="right" 
+                type="monotone" 
+                dataKey="revenue" 
+                stroke="#22c55e" 
+                strokeWidth={3} 
+                name="Revenue ($)"
+                dot={{ fill: '#22c55e', strokeWidth: 2, r: 4 }}
+                activeDot={{ r: 6, stroke: '#22c55e', strokeWidth: 2 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
         {/* Agent Performance */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Agent Accuracy</h3>
-          <ResponsiveContainer width="100%" height={300}>
+        <div className="card-elevated p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-xl font-bold text-gray-900">Agent Accuracy</h3>
+              <p className="text-sm text-gray-600 mt-1">Performance metrics for AI agents</p>
+            </div>
+            <span className="status-badge status-success">All Active</span>
+          </div>
+          <ResponsiveContainer width="100%" height={320}>
             <BarChart data={agentMetrics}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis domain={[80, 100]} />
-              <Tooltip />
-              <Bar dataKey="accuracy" fill="#8b5cf6" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis 
+                dataKey="name" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 12 }}
+              />
+              <YAxis 
+                domain={[80, 100]} 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 12 }}
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 25px -5px rgba(0, 0, 0, 0.1)'
+                }}
+                formatter={(value) => [`${value}%`, 'Accuracy']}
+              />
+              <Bar 
+                dataKey="accuracy" 
+                fill="#8b5cf6" 
+                radius={[8, 8, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Recent Projects & Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Recent Projects */}
-        <div className="card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Recent Projects</h3>
-            <Link to="/projects" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+        <div className="card-elevated p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-xl font-bold text-gray-900">Recent Projects</h3>
+              <p className="text-sm text-gray-600 mt-1">Latest project activity</p>
+            </div>
+            <Link to="/projects" className="btn-ghost btn-sm">
               View All
             </Link>
           </div>
           <div className="space-y-4">
-            {projects.slice(0, 3).map((project) => (
-              <div key={project.id} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+            {projects.slice(0, 3).map((project, index) => (
+              <div 
+                key={project.id} 
+                className="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-200 cursor-pointer animate-slide-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div className="flex-shrink-0">
-                  <div className={`w-3 h-3 rounded-full ${
-                    project.status === 'Completed' ? 'bg-green-500' :
-                    project.status === 'In Progress' ? 'bg-blue-500' : 'bg-yellow-500'
+                  <div className={`w-4 h-4 rounded-full shadow-soft ${
+                    project.status === 'Completed' ? 'bg-success-500' :
+                    project.status === 'In Progress' ? 'bg-primary-500' : 'bg-warning-500'
                   }`}></div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{project.name}</p>
-                  <p className="text-xs text-gray-500">{project.client}</p>
+                  <p className="text-sm font-semibold text-gray-900 truncate">{project.name}</p>
+                  <p className="text-xs text-gray-500 mt-1">{project.client}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-500">{project.progress}%</p>
-                  <div className="w-16 bg-gray-200 rounded-full h-1.5 mt-1">
+                  <p className="text-sm font-medium text-gray-900 mb-1">{project.progress}%</p>
+                  <div className="w-20 bg-gray-200 rounded-full h-2">
                     <div 
-                      className="bg-primary-500 h-1.5 rounded-full" 
+                      className="bg-primary-500 h-2 rounded-full transition-all duration-500" 
                       style={{ width: `${project.progress}%` }}
                     ></div>
                   </div>
@@ -187,36 +282,47 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <div className="card-elevated p-8">
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-gray-900">Quick Actions</h3>
+            <p className="text-sm text-gray-600 mt-1">Common tasks and shortcuts</p>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <Link 
               to="/projects" 
-              className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="card-interactive flex flex-col items-center p-6 group"
             >
-              <FolderOpen className="w-8 h-8 text-primary-500 mb-2" />
-              <span className="text-sm font-medium text-gray-700">New Project</span>
+              <div className="w-12 h-12 bg-primary-100 rounded-2xl flex items-center justify-center mb-3 group-hover:bg-primary-200 transition-colors">
+                <FolderOpen className="w-6 h-6 text-primary-600" />
+              </div>
+              <span className="text-sm font-semibold text-gray-700 group-hover:text-gray-900">New Project</span>
             </Link>
             <Link 
               to="/prompts" 
-              className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="card-interactive flex flex-col items-center p-6 group"
             >
-              <FileText className="w-8 h-8 text-green-500 mb-2" />
-              <span className="text-sm font-medium text-gray-700">Add Prompt</span>
+              <div className="w-12 h-12 bg-success-100 rounded-2xl flex items-center justify-center mb-3 group-hover:bg-success-200 transition-colors">
+                <FileText className="w-6 h-6 text-success-600" />
+              </div>
+              <span className="text-sm font-semibold text-gray-700 group-hover:text-gray-900">Add Prompt</span>
             </Link>
             <Link 
               to="/agents" 
-              className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="card-interactive flex flex-col items-center p-6 group"
             >
-              <Bot className="w-8 h-8 text-purple-500 mb-2" />
-              <span className="text-sm font-medium text-gray-700">Monitor Agents</span>
+              <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center mb-3 group-hover:bg-purple-200 transition-colors">
+                <Bot className="w-6 h-6 text-purple-600" />
+              </div>
+              <span className="text-sm font-semibold text-gray-700 group-hover:text-gray-900">Monitor Agents</span>
             </Link>
             <Link 
               to="/reports" 
-              className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="card-interactive flex flex-col items-center p-6 group"
             >
-              <BarChart3 className="w-8 h-8 text-blue-500 mb-2" />
-              <span className="text-sm font-medium text-gray-700">View Reports</span>
+              <div className="w-12 h-12 bg-info-100 rounded-2xl flex items-center justify-center mb-3 group-hover:bg-info-200 transition-colors">
+                <BarChart3 className="w-6 h-6 text-info-600" />
+              </div>
+              <span className="text-sm font-semibold text-gray-700 group-hover:text-gray-900">View Reports</span>
             </Link>
           </div>
         </div>
