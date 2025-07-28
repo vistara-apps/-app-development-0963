@@ -11,13 +11,15 @@ import Reports from './pages/Reports'
 import ClientPortal from './pages/ClientPortal'
 import Settings from './pages/Settings'
 import { AppProvider } from './context/AppContext'
+import { AgentProvider } from './context/AgentContext'
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <AppProvider>
-      <div className="flex h-screen bg-gray-50">
+      <AgentProvider>
+        <div className="flex h-screen bg-gray-50">
         <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
         
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -38,7 +40,8 @@ function App() {
             </div>
           </main>
         </div>
-      </div>
+        </div>
+      </AgentProvider>
     </AppProvider>
   )
 }
